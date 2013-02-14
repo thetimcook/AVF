@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0"/>
+	<title>AVF Project App</title>
+	<link rel="stylesheet" href="css/flexslider.css" type="text/css">
+	<style>
+		html {
+			background: white;
+			background-image: url('images/twitter-bg.jpg');
+			background-repeat: no-repeat;
+			font-family: helvetica, sans-serif;
+			-webkit-font-smoothing: antialiased;
+		}
+		body {
+			margin: 0px;
+			padding: 0px;
+			
+		}
+		header {
+			width: 100%;
+			height: 42px;
+			background: black;
+			position: fixed;
+			top: 0;
+			z-index: 1;
+		}
+		#head {
+			width: 100%;
+			height: 40px;
+			position: fixed;
+			top: 0;
+			margin: 1px 0px;
+			padding: 0px;
+			background: -webkit-linear-gradient(#7debff 0%, #00bfff 100%);
+			box-shadow: inset 0px 2px 0px 0px rgba(255,255,255,0.5);
+			border-radius: 6px 6px 0px 0px;
+			z-index: 1;
+		}
+		#search {
+			height: 40px;
+			width: 100%;
+			float: left;
+			margin-top: 42px;
+			background: rgba(0, 187, 242, 1.0);
+			border-bottom: 1px solid #333;
+			box-shadow: inset 0px 1px 0px 0px rgba(255,255,255,0.8), 0px 1px 3px rgba(0,0,0,0.5);;
+		}
+		input {
+			width: 300px; 
+			line-height: 3em;
+			font-size: 1.5em;
+			margin: 10px;
+			
+		}
+		h1 {
+			margin: 8px 0px;
+			font-size: 1.2em;
+			text-align: center;
+			color: #333;
+			text-shadow: 0px -1px 1px rgba(255,255,255,0.5);
+		}
+		h2 {
+			margin: 10px 0px 0px 0px;
+			font-size: 1em;
+			float: left;
+			color: #333;
+			font-weight: 400;
+			text-shadow: 0px 1px 1px rgba(255,255,255,0.5);
+		}
+		p {
+			font-size: .8em;
+			padding-right: 20px;
+		}
+		#api-data {
+			float: left;
+			margin-top: 82px;
+			width: 100%;
+			background: white;
+		}
+		#data-list {
+			float: left;
+			width: 100%;
+			padding: 0px;
+			margin: 0px;
+		}
+		#data-list > li {
+			list-style: none;
+			margin: 0px;
+			padding: 0px;
+			width: 100%;
+			border-bottom: 1px solid #333;
+			background: -webkit-linear-gradient(#dddddd 0%, #aaaaaa 100%);
+			box-shadow: inset 0px 1px 0px 0px white;
+			float: left;
+			position: relative;
+		}
+		.label {
+			width: 100%;
+			position: absolute;
+			bottom: 0;
+			background: rgba(255,255,255,0.5);
+			box-shadow: inset 0px 1px 0px 0px rgba(255,255,255,0.8);
+			float: left;
+		}
+		img {
+			width: 40px;
+			height: 40px;
+			border-radius: 20px;
+			background-size: cover;
+			margin: 26px 10px;
+			float: left;
+		}
+		
+		
+	</style>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<script type="text/javascript" src="js/jquery.infinitescroll.js"></script>
+	<script>
+		$(document).ready(function(){
+			$('#data-list').infinitescroll({
+				dataType: 'json',
+				appendCallback: false
+			}, function(json, opts) {
+				console.log(pageNum);
+				var pageNum = opts.state.currPage;
+
+			});		
+			
+
+		var currentPage;
+		var totalPages;
+		var getData = function(tSearch){
+			$.ajax({
+				url: "http://search.twitter.com/search.json?q=%40"+ tSearch +"",
+				dataType: "jsonp",
+				success: function (response){
+					for(var i=0, j=response.results.length; i<j; i++){
+						var img = response.results[i].profile_image_url;
+						var name = response.results[i].from_user;
+						var id = response.results[i].id;
+						var tweet = response.results[i].text;
+						
+						$('#data-list').append(''+
+							'<li id="'+ id +'">'+
+							
+									'<img src="'+ img +'" />'+
+									'<h2>'+ name +'</h2><br/>'+
+									'<p>'+ tweet +'</p>'+
+						
+							'</li>'
+						);
+					};
+					slideOut();
+				}				
+			});	
+			
+		};
+		var searchUpdate = function() {
+			$('#search input').keyup(function() {
+				$('#data-list li').remove();
+				getData($(this).val());
+				console.log($(this).val());
+			});
+		};
+		searchUpdate();
+			
+		/*
+	$('button').click(function(){
+				if ((currentPage + 1) < totalPages) {
+					getData(currentPage + 1);
+				};
+				
+			});
+*/
+	
+			var slideOut = function() {
+				$('#data-list > li').click(function() {
+					if ($(this).css('height') === '60px') {
+						$(this).animate({height: "300px"}, 300);
+					} else {
+						$(this).animate({height: "60px"}, 300);
+					};
+				});
+				$('#data-list > li').mouseleave(function() {
+					if ($(this).css('height') === '300px') {
+						$(this).animate({height: "60px"}, 300);
+					};
+				});
+			};
+			
+		
+			/*
+$('.label').blurjs({
+				source: 'body',
+				overlay: 'rgba(255,255,255,0.5)'
+			});
+*/
+			
+		
+			
+			
+		});
+	</script>
+</head>
+<body>
+	
+	<header>
+		<div id="head">	
+			<h1>twitter</h1>
+		</div>
+		<div id="search">
+			<input type="search" placeholder="@"/>
+		</div>
+	</header>
+	<div id="api-data">
+		<ul id="data-list">
+	
+		</ul>
+		<!--
+<button>
+			Load More
+		</button>
+-->
+	</div>
+	
+	
+	
+
+
+
+</body>
+</html>
