@@ -9,6 +9,7 @@
 		html {
 			background: black;
 			font-family: helvetica, sans-serif;
+			-webkit-font-smoothing: antialiased;
 		}
 		body {
 			margin: 0px;
@@ -31,7 +32,7 @@
 			margin: 1px 0px;
 			padding: 0px;
 			background: -webkit-linear-gradient(rgba(251, 167, 199, 1.0) 0%, rgba(236, 86, 148, 1.0) 100%);
-			box-shadow: inset 0px 1px 0px 1px rgba(255,255,255,0.5), 0px 1px 3px rgba(0,0,0,0.5);
+			box-shadow: inset 0px 0px 0px 1px rgba(255,255,255,0.5), 0px 1px 3px rgba(0,0,0,0.5);
 			border-radius: 6px 6px 0px 0px;
 			z-index: 1;
 		}
@@ -40,6 +41,7 @@
 			font-size: 1.2em;
 			text-align: center;
 			color: #333;
+			text-shadow: 0px -1px 1px rgba(255,255,255,0.5);
 		}
 		h2 {
 			margin: 10px 0px 0px 0px;
@@ -47,6 +49,7 @@
 			float: left;
 			color: #333;
 			font-weight: 400;
+			text-shadow: 0px 1px 1px rgba(255,255,255,0.5);
 		}
 		#api-data {
 			float: left;
@@ -123,19 +126,36 @@
 			background-image: url('images/icon-hearts.png');
 			background-position: 0 0;
 		}
+		button {
+			width: 100%;
+			height: 40px;
+			margin: 0px;
+			font-size: 1em;
+		}
 	</style>
 	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
-	<script type="text/javascript" src="js/blur.js"></script>
 	<script type="text/javascript" src="js/jquery.infinitescroll.js"></script>
 	<script>
 		$(document).ready(function(){
-		
-		
+			$('#data-list').infinitescroll({
+				dataType: 'json',
+				appendCallback: false
+			}, function(json, opts) {
+				console.log(pageNum);
+				var pageNum = opts.state.currPage;
+
+			});		
+			
+
+		var currentPage;
+		var totalPages;
+		var getData = function(pageNum){
 			$.ajax({
-				url: "http://api.dribbble.com/players/timcook/shots/following",
+				url: "http://api.dribbble.com/players/timcook/shots/following?page="+ pageNum +"",
 				dataType: "jsonp",
 				success: function (response){
-					
+					totalPages = response.pages;
+					currentPage = response.page;
 					for(var i=0, j=response.shots.length; i<j; i++){
 						var img = response.shots[i].image_url;
 						var title = response.shots[i].title;
@@ -144,6 +164,8 @@
 						var likes = response.shots[i].likes_count;
 						var views = response.shots[i].views_count;
 						var comments = response.shots[i].comments_count;
+						
+						
 						$('#data-list').append(''+
 							'<li id="'+ id +'" style="background-image: url('+ img +'); background-size: cover; background-position: center center">'+
 								'<div class="label">'+
@@ -156,23 +178,41 @@
 									'</ul>'+
 								'</div>'+
 							'</li>'
-						);				
+						);
 					};
 					slideOut();
 				}				
+			});	
+			
+		};
+		getData(1);
+			
+			$('button').click(function(){
+				if ((currentPage + 1) < totalPages) {
+					getData(currentPage + 1);
+				};
+				
 			});
 			
-			
-			
+			$('#data-list').infinitescroll({
+				dataType: 'json',
+				appendCallback: false
+			}, function(json, opts) {
+				
+				var page = opts.state.currPage;
+				console.log(page);
+			});
+		
+	
 			var slideOut = function() {
-				$('li').click(function() {
+				$('#data-list > li').click(function() {
 					if ($(this).css('height') === '60px') {
 						$(this).animate({height: "300px"}, 300);
 					} else {
 						$(this).animate({height: "60px"}, 300);
 					};
 				});
-				$('li').mouseleave(function() {
+				$('#data-list > li').mouseleave(function() {
 					if ($(this).css('height') === '300px') {
 						$(this).animate({height: "60px"}, 300);
 					};
@@ -204,6 +244,9 @@ $('.label').blurjs({
 		<ul id="data-list">
 	
 		</ul>
+		<button>
+			Load More
+		</button>
 	</div>
 	
 	
