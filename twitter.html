@@ -38,6 +38,17 @@
 			border-radius: 6px 6px 0px 0px;
 			z-index: 1;
 		}
+		#back {
+			margin: 10px;
+			width: 30px;
+			height: 30px;
+			background-image: url('images/exit.png');
+			background-size: cover;
+			position: fixed;
+			top: 0;
+			left: 0;
+			z-index: 1;
+		}
 		#search {
 			height: 48px;
 			width: 100%;
@@ -119,18 +130,8 @@
 		
 	</style>
 	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
-	<script type="text/javascript" src="js/jquery.infinitescroll.js"></script>
 	<script>
 		$(document).ready(function(){
-			$('#data-list').infinitescroll({
-				dataType: 'json',
-				appendCallback: false
-			}, function(json, opts) {
-				console.log(pageNum);
-				var pageNum = opts.state.currPage;
-
-			});		
-			
 
 		var currentPage;
 		var totalPages;
@@ -155,7 +156,6 @@
 							'</li>'
 						);
 					};
-					slideOut();
 				}				
 			});	
 			
@@ -168,18 +168,35 @@
 			});
 		};
 		searchUpdate();
-			
-		/*
-	$('button').click(function(){
-				if ((currentPage + 1) < totalPages) {
-					getData(currentPage + 1);
-				};
-				
-			});
-*/
+
+		});
+	</script>
+</head>
+<body>
 	
-			var slideOut = function() {
-				$('#data-list > li').click(function() {
+	<header>
+		<div id="head">
+			<a id="back" href="index.html"></a>
+			<h1>twitter</h1>
+		</div>
+		<div id="search">
+			<input type="search" placeholder="@"/>
+		</div>
+	</header>
+	<div id="api-data">
+		<ul id="data-list">
+	
+		</ul>
+
+	</div>
+	
+	
+	
+
+
+
+</body>
+</html>) {
 					if ($(this).css('height') === '60px') {
 						$(this).animate({height: "300px"}, 300);
 					} else {
