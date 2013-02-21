@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Location Example</title>
+    <style>
+    	html, body {
+	    	margin: 0px;
+	    	padding: 0px;
+	    	width: 100%;
+	    	height: 100%;
+	    	font-family: helvetica, sans-serif;
+	    	
+    	}
+    	header {
+	    	width: 100%;
+			height: 48px;
+			position: fixed;
+			top: 0;
+			margin: 1px 0px;
+			padding: 0px;
+			background: -webkit-linear-gradient(#ccc 0%, #777 100%);
+			box-shadow: inset 0px 1px 0px 0px rgba(255,255,255,1);
+			border-bottom: 1px solid black;
+			border-top: 1px solid black;
+			z-index: 2;
+    	}
+    	h1 {
+    		font-family: helvetica, sans-serif;
+			margin: 8px 0px;
+			font-size: 1.6em;
+			text-align: center;
+			color: #333;
+			text-shadow: 0px -1px 1px rgba(255,255,255,0.5);
+		}
+		#back {
+			margin: 10px;
+			width: 30px;
+			height: 30px;
+			background-image: url('images/exit.png');
+			background-size: cover;
+			position: fixed;
+			top: 0;
+			left: 0;
+			z-index: 1;
+		}
+		h2 {
+			text-align: center;
+		}
+		article {
+			padding-top: 60px;
+		}
+		#data-list {
+			float: left;
+		}
+		#data-list li{
+			float: left;
+			width: 200px;
+			margin: 20px;
+			border: 3px solid #333;
+			border-radius: 6px;
+			list-style: none;
+			padding: 60px 5px 5px 5px;
+		}
+    </style>
+    <script type="text/javascript" charset="utf-8" src="cordova-2.3.0.js"></script>
+    <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+	$(document).ready(function(){
+  	    // Wait for Cordova to load
+	    //
+	    document.addEventListener("deviceready", onDeviceReady, false);
+	
+	    // Cordova is ready
+	    //
+	    function onDeviceReady() {
+	        navigator.geolocation.getCurrentPosition(onSuccess, onError);
+	    }
+	     // onSuccess Geolocation
+	    //
+	    function onSuccess(position) {
+	        var element = document.getElementById('geolocation');
+	        $.ajax({
+				url: "http://api.wunderground.com/api/9b3e5f0bbc5e8c85/forecast/q/"+ position.coords.latitude +","+ position.coords.longitude +".json",
+				dataType: "jsonp",
+				success: function (response){
+				console.log(response);
+					for(var i=0, j=response.forecast.txt_forecast.forecastday.length; i<j; i++){
+						var id = response.forecast.txt_forecast.forecastday[i].period;
+						var icon = response.forecast.txt_forecast.forecastday[i].icon_url;
+						var title = response.forecast.txt_forecast.forecastday[i].title;
+						var weather = response.forecast.txt_forecast.forecastday[i].fcttext;
+						
+						
+						$('#data-list').append(''+
+							'<li id="'+ id +'" style="background-image: url('+ icon +'); background-size: 60px 60px; background-repeat: no-repeat; background-position: top center">'+
+								'<div class="label">'+
+									'<h2>'+ title +'</h2>'+
+									'<p>' + weather +'</p>'+
+								'</div>'+
+							'</li>'
+						);
+					};
+				}				
+			});	
+	    }
+	    // onError Callback receives a PositionError object
+	    //
+	    function onError(error) {
+	        alert('code: '    + error.code    + '\n' +
+	                'message: ' + error.message + '\n');
+	    }
+
+	    	
+	});
+
+    </script>
+    </head>
+
+  <body>
+  	<header>
+  		<a id="back" href="index.html"></a>
+  		<h1>Local Weather
+  		</h1>
+  	
+  	</header>
+  	<article>
+  		<ul id="data-list">
+
+  		</ul>
+  	</article>
+  </body>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0"/>
+	<title>AVF Project App</title>
+	<link rel="stylesheet" href="css/flexslider.css" type="text/css">
+	<style>
+		html {
+			background: black;
+			font-family: helvetica, sans-serif;
+			-webkit-font-smoothing: antialiased;
+		}
+		body {
+			margin: 0px;
+			padding: 0px;
+			
+		}
+		header {
+			width: 100%;
+			height: 50px;
+			background: black;
+			position: fixed;
+			top: 0;
+			z-index: 1;
+		}
+		#head {
+			width: 100%;
+			height: 48px;
+			position: fixed;
+			top: 0;
+			margin: 1px 0px;
+			padding: 0px;
+			background: -webkit-linear-gradient(rgba(251, 167, 199, 1.0) 0%, rgba(236, 86, 148, 1.0) 100%);
+			box-shadow: inset 0px 0px 0px 1px rgba(255,255,255,0.5), 0px 1px 3px rgba(0,0,0,0.5);
+			border-radius: 6px 6px 0px 0px;
+			z-index: 1;
+		}
+		#back {
+			margin: 10px;
+			width: 30px;
+			height: 30px;
+			background-image: url('images/exit.png');
+			background-size: cover;
+			position: fixed;
+			top: 0;
+			left: 0;
+			z-index: 1;
+		}
+		h1 {
+			margin: 8px 0px;
+			font-size: 1.6em;
+			text-align: center;
+			color: #333;
+			text-shadow: 0px -1px 1px rgba(255,255,255,0.5);
+		}
+		h2 {
+			margin: 10px 0px 0px 0px;
+			font-size: 1em;
+			float: left;
+			color: #333;
+			font-weight: 400;
+			text-shadow: 0px 1px 1px rgba(255,255,255,0.5);
+		}
+		#api-data {
+			float: left;
+			margin-top: 50px;
+			width: 100%;
+			background: white;
+		}
+		#data-list {
+			float: left;
+			width: 100%;
+			padding: 0px;
+			margin: 0px;
+		}
+		#data-list > li {
+			list-style: none;
+			margin: 0px;
+			padding: 0px;
+			width: 100%;
+			border-bottom: 1px solid #333;
+			box-shadow: inset 0px 1px 0px 0px white;
+			background-size: cover;
+			background-position: center center;
+			float: left;
+			height: 60px;
+			position: relative;
+		}
+		.label {
+			width: 100%;
+			height: 60px;
+			position: absolute;
+			bottom: 0;
+			background: rgba(255,255,255,0.5);
+			box-shadow: inset 0px 1px 0px 0px rgba(255,255,255,0.8);
+			float: left;
+		}
+		img {
+			width: 40px;
+			height: 40px;
+			border-radius: 20px;
+			background-size: cover;
+			margin: 10px;
+			float: left;
+		}
+		.group {
+			position: absolute;
+			bottom: 0;
+			font-size: .7em;
+			font-weight: 700;
+			color: #333;
+			margin-bottom: 10px;
+			padding-left: 50px;
+		}
+		.group > li {
+			list-style: none;
+			display: inline;
+			margin: 0px 0px 0px 12px;
+			width: auto;
+		}
+		.views {
+			padding-left: 18px;
+			background-repeat: no-repeat;
+			background-image: url('images/icon-views-sm.png');
+			background-position: 0 50%;
+		}
+		.comments {
+			padding-left: 15px;
+			background-repeat: no-repeat;
+			background-image: url('images/icon-comments.png');
+			background-position: 0 0;
+		}
+		.likes {
+			padding-left: 15px;
+			background-repeat: no-repeat;
+			background-image: url('images/icon-hearts.png');
+			background-position: 0 0;
+		}
+		button {
+			width: 100%;
+			height: 48px;
+			margin: 0px;
+			font-size: 1em;
+		}
+	</style>
+	<script type="text/javascript" charset="utf-8" src="cordova-2.3.0.js"></script>
+	<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+	<script>
+		$(document).ready(function(){
+		$(document).ready(function(){
+		// Wait for Cordova to load
+	    // 
+	    document.addEventListener("deviceready", onDeviceReady, false);
+	
+	    // Cordova is loaded and it is now safe to make calls Cordova methods
+	    //
+	    function onDeviceReady() {
+	        checkConnection();
+	    }
+	
+	    function checkConnection() {
+	        var networkState = navigator.connection.type;
+
+	        if(networkState === Connection.NONE) {
+		        alert("Cannot Connect to Dribbble");
+	        };
+	    }
+
+		var currentPage;
+		var totalPages;
+		var getData = function(pageNum){
+			$.ajax({
+				url: "http://api.dribbble.com/players/timcook/shots/following?page="+ pageNum +"",
+				dataType: "jsonp",
+				success: function (response){
+					totalPages = response.pages;
+					currentPage = response.page;
+					for(var i=0, j=response.shots.length; i<j; i++){
+						var img = response.shots[i].image_url;
+						var title = response.shots[i].title;
+						var id = response.shots[i].id;
+						var player = response.shots[i].player.avatar_url;
+						var likes = response.shots[i].likes_count;
+						var views = response.shots[i].views_count;
+						var comments = response.shots[i].comments_count;
+						
+						
+						$('#data-list').append(''+
+							'<li id="'+ id +'" style="background-image: url('+ img +'); background-size: cover; background-position: center center">'+
+								'<div class="label">'+
+									'<img src="'+ player +'" />'+
+									'<h2>'+ title +'</h2>'+
+									'<ul class="group">'+
+										'<li class="views">'+ views +'</li>'+
+										'<li class="comments">'+ comments +'</li>'+
+										'<li class="likes">'+ likes +'</li>'+
+									'</ul>'+
+								'</div>'+
+							'</li>'
+						);
+					};
+					slideOut();
+				}				
+			});	
+			
+		};
+		getData(1);
+			
+			$('button').click(function(){
+				if ((currentPage + 1) < totalPages) {
+					getData(currentPage + 1);
+				};
+				
+			});
+	
+			var slideOut = function() {
+				$('#data-list > li').click(function() {
+					if ($(this).css('height') === '60px') {
+						$(this).animate({height: "300px"}, 300);
+					} else {
+						$(this).animate({height: "60px"}, 300);
+					};
+				});
+				$('#data-list > li').mouseleave(function() {
+					if ($(this).css('height') === '300px') {
+						$(this).animate({height: "60px"}, 300);
+					};
+				});
+			};	
+		});
+	</script>
+</head>
+<body>
+	
+	<header>
+		<div id="head">
+			<a id="back" href="index.html"></a>
+			<h1>dribbble</h1>
+		</div>
+	</header>
+	<div id="api-data">
+		<ul id="data-list">
+	
+		</ul>
+		<button>
+			Load More
+		</button>
+	</div>
+</body>
+</html>
