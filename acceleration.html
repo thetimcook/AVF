@@ -2,10 +2,62 @@
 <html>
   <head>
     <title>Acceleration Example</title>
-
-    <script type="text/javascript" charset="utf-8" src="cordova-2.4.0.js"></script>
+    <style>
+    	html, body {
+	    	margin: 0px;
+	    	padding: 0px;
+	    	width: 100%;
+	    	height: 100%;
+    	}
+    	#ball {
+	    	width: 40px;
+	    	height: 40px;
+	    	padding: 20px;
+	    	border-radius: 40px;
+	    	background: red;
+	    	margin: auto;
+	    	z-index: 1;
+    	}
+    	header {
+	    	width: 100%;
+			height: 48px;
+			position: fixed;
+			top: 0;
+			margin: 1px 0px;
+			padding: 0px;
+			background: -webkit-linear-gradient(#ccc 0%, #777 100%);
+			box-shadow: inset 0px 1px 0px 0px rgba(255,255,255,1);
+			border-bottom: 1px solid black;
+			border-top: 1px solid black;
+			z-index: 2;
+    	}
+    	#accelerometer {
+	    	padding: 60px 10px 10px 10px;
+    	}
+    	h1 {
+    		font-family: helvetica, sans-serif;
+			margin: 8px 0px;
+			font-size: 1.6em;
+			text-align: center;
+			color: #333;
+			text-shadow: 0px -1px 1px rgba(255,255,255,0.5);
+		}
+		#back {
+			margin: 10px;
+			width: 30px;
+			height: 30px;
+			background-image: url('images/exit.png');
+			background-size: cover;
+			position: fixed;
+			top: 0;
+			left: 0;
+			z-index: 2;
+		}
+    </style>
+    <script type="text/javascript" charset="utf-8" src="cordova-2.3.0.js"></script>
+    <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
     <script type="text/javascript" charset="utf-8">
-
+	$(document).ready(function(){
     // The watch id references the current `watchAcceleration`
     var watchID = null;
 
@@ -24,7 +76,7 @@
     function startWatch() {
 
         // Update acceleration every 3 seconds
-        var options = { frequency: 3000 };
+        var options = { frequency: 40 };
 
         watchID = navigator.accelerometer.watchAcceleration(onSuccess, onError, options);
     }
@@ -37,7 +89,8 @@
             watchID = null;
         }
     }
-
+    
+	
     // onSuccess: Get a snapshot of the current acceleration
     //
     function onSuccess(acceleration) {
@@ -46,17 +99,36 @@
                             'Acceleration Y: ' + acceleration.y + '<br />' +
                             'Acceleration Z: ' + acceleration.z + '<br />' +
                             'Timestamp: '      + acceleration.timestamp + '<br />';
-    }
 
+		var w = $(window).width();
+		var h = $(window).height(); 
+		                   
+        if (h >= w) {
+		    $('#ball').css("margin-left", parseInt( $('#ball').css("margin-left")) - acceleration.y );
+	   		$('#ball').css("margin-top", parseInt( $('#ball').css("margin-top")) - acceleration.x );
+        } else {
+	        $('#ball').css("margin-left", parseInt( $('#ball').css("margin-left")) + acceleration.y );
+	   		$('#ball').css("margin-top", parseInt( $('#ball').css("margin-top")) + acceleration.x );
+        }
+    }
+    
+   		
+    
     // onError: Failed to get the acceleration
     //
     function onError() {
         alert('onError!');
     }
-
+    });
     </script>
   </head>
   <body>
+  	<header>
+  		<a id="back" href="index.html"></a>
+  		<h1>Accelerometer Test</h1>
+  	
+  	</header>
     <div id="accelerometer">Waiting for accelerometer...</div>
+    <div id="ball"></div>
   </body>
 </html>

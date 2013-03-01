@@ -35,6 +35,11 @@ a {
 	text-decoration: none;
 	color: #333;
 }
+p {
+	padding: 10px;
+	padding-right: 100px;
+	display: none;
+}
 header {
 	position: fixed;
 	top: 0;

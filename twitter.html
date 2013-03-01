@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<title>AVF Project App</title>
 	<link rel="stylesheet" href="css/flexslider.css" type="text/css">
 	<style>
@@ -126,49 +126,106 @@
 			margin: 15px;
 			float: left;
 		}
+		a {
+			color: #0072a3;
+			cursor: pointer;
+			text-decoration: none;
+		}
+		a:active {
+			color: #0072a3;
+			cursor: pointer;
+		}
 		
 		
 	</style>
-	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<script type="text/javascript" charset="utf-8" src="cordova-2.3.0.js"></script>
+	<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
 	<script>
 		$(document).ready(function(){
-
-		var currentPage;
-		var totalPages;
-		var getData = function(tSearch){
-			$.ajax({
-				url: "http://search.twitter.com/search.json?q=%40"+ tSearch +"",
-				dataType: "jsonp",
-				success: function (response){
-					for(var i=0, j=response.results.length; i<j; i++){
-						var img = response.results[i].profile_image_url;
-						var name = response.results[i].from_user;
-						var id = response.results[i].id;
-						var tweet = response.results[i].text;
-						
-						$('#data-list').append(''+
-							'<li id="'+ id +'">'+
-							
-									'<img src="'+ img +'" />'+
-									'<h2>'+ name +'</h2>'+
-									'<p>'+ tweet +'</p>'+
-						
-							'</li>'
-						);
-					};
-				}				
-			});	
 			
-		};
-		var searchUpdate = function() {
-			$('#search input').keyup(function() {
-				$('#data-list li').remove();
-				getData($(this).val());
-				console.log($(this).val());
-			});
-		};
-		searchUpdate();
+			// Wait for Cordova to load
+		    // 
+		    document.addEventListener("deviceready", onDeviceReady, false);
 
+		    // Cordova is loaded and it is now safe to make calls Cordova methods
+		    //
+		    function onDeviceReady() {
+		        checkConnection();
+		        
+		    };
+	    	
+		    
+		    function checkConnection() {
+		        var networkState = navigator.connection.type;
+	
+		        if(networkState === Connection.NONE) {
+			        alert("Cannot Connect to Twitter");
+		        };
+		    }
+			var currentPage;
+			var totalPages;
+			var getData = function(tSearch){
+				$.ajax({
+					url: "http://search.twitter.com/search.json?q=%40"+ tSearch +"",
+					dataType: "jsonp",
+					success: function (response){
+						String.prototype.hashify = function() {
+				            return this.replace(/#([A-Za-z0-9\/\.]*)/g, function(m) {
+				                return '<a name="http://twitter.com/search?q=' + m.replace('#','') + '">' + m + "</a>";
+				            });
+				        };
+				
+				        String.prototype.linkify = function(){
+				            return this.replace(/[A-Za-z]+:\/\/[A-Za-z0-9-_]+\.[A-Za-z0-9-_:%&\?\/.=]+/, function(m) {
+				                return '<a name="' + m + '">' + m + "</a>";
+				            });
+				        };
+				
+				        String.prototype.atify = function() {
+				            return this.replace(/@[\w]+/g, function(m) {
+				                return '<a name="http://www.twitter.com/' + m.replace('@','') + '">' + m + "</a>";
+				            });
+				        }; 
+						for(var i=0, j=response.results.length; i<j; i++){
+							var img = response.results[i].profile_image_url;
+							var name = response.results[i].from_user;
+							var id = response.results[i].id;
+							var tweet = response.results[i].text;
+								tweet = tweet.linkify().atify().hashify();
+							
+							$('#data-list').append(''+
+								'<li id="'+ id +'">'+
+								
+										'<img src="'+ img +'" />'+
+										'<h2>'+ name +'</h2>'+
+										'<p>'+ tweet +'</p>'+
+							
+								'</li>'
+							);
+						};
+						pageLink();
+					}				
+				});	
+				
+			};
+			var pageLink = function() {
+				$('#data-list a').on('click', function(){
+			    	var link = $(this).attr('name');
+			    	console.log(link);
+				    var ref = window.open(link, '_blank', 'location=yes, resizable=yes');
+			        ref.addEventListener('loadstart', function() { alert('start: ' + event.url); });
+			        ref.addEventListener('loadstop', function() { alert('stop: ' + event.url); });
+			        ref.addEventListener('exit', function() { alert(event.type); });
+			    });
+			};
+			
+			var searchUpdate = function() {
+				$('#search input').keyup(function() {
+					$('#data-list li').remove();
+					getData($(this).val());
+				});
+			};
+			searchUpdate();
 		});
 	</script>
 </head>

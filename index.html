@@ -21,19 +21,19 @@
 				<div class="slide-content">
 					<h2>Native Feature Demos</h2>
 					<ul class="icons">
-						<li id="gear"><a href="#">
-							<h3>Settings</h3>
+						<li id="gear"><a href="acceleration.html">
+							<h3>Accelerometer</h3>
 						</a></li>
-						<li id="cloud"><a href="#">
+						<li id="cloud"><a href="web.html">
 							<h3>API Call</h3>
 						</a></li>
-						<li id="location"><a href="#">
+						<li id="location"><a href="compass.html">
 							<h3>GPS Data</h3>
 						</a></li>
 						<li id="photos"><a href="#">
 							<h3>Photo Access</h3>
 						</a></li>
-						<li id="weather"><a href="#">
+						<li id="weather"><a href="weather.html">
 							<h3>Local Weather</h3>
 						</a></li>
 					</ul>
@@ -63,25 +63,60 @@
 					<h2>Research</h2>
 					<ul class="research">
 						<li><a href="#">
-							<h3>Data Research</h3>
-						</a></li>
+							<h3 id="r1">Data Research</h3></a>
+							<p id="p1">1.
+I have my app setup to use jquery and I am accessing it remotely, but after trying to load my app without a connection this really needs to change. I thought that this data was downloaded with the app on instal but I was wrong. I need to store my javascript libraries locally and also consider the possibility of no internet access with my apps. The way I display data should change from with a connection and without. I could add a simple paragraph that says this data needs a network connection to load, letting the use know that the app is working properly and just was unable to collect that data.
+
+2.
+JSON-P is a great resource because of its flexibility and easy use. Almost every API uses JSON-P meaning that if you right your code for json and you can easily swap out the code.
+
+3.
+Some examples of json data that can pair well with native features is the geolocation and local storage. Geolocation is one of the most important thing with an app, from local search to activity tracking. geolocation is really driving what is possible with our devices today. And apps that let you download and upload files to your device is another great feature to consider too. From apps like dropbox with its file sync between local and cloud storage to social networks accessing your contact book to find fiends online. There are countless possibilities when you combine online APIs and native features.
+
+4.
+I have always loved the use of touch in mobile apps and I want to see more intuitive and unique interface designs utilizing it. There is just something really gratifying about swiping my finger access the screen instead of just tapping a button. 
+
+5.
+In the past I have not always researched UI and UX design but with sites like dribbble.com and pttrns.com I have easy access to unique designs that inspire innovation. I can also use dribbble to share my ideas and give back to the community that helped me craft my designs. 
+</p>
+						</li>
 						<li><a href="#">
-							<h3>Accessibility</h3>
-						</a></li>
+							<h3 id="r2">Accessibility</h3></a>
+							<p id="p2">One big thing that need to happen in my app is to make all of my javascript libraries local instead of calling them externally. This will allow my app to function when there is no internet connection and also increase load times when there is. 
+
+I have used screenreader services before on some sites and I never really had a great experience with them. I have also used siri, google now, and the mac text to speech features and they are much better. The main thing missing from these online services is the lack of local software that can be used to enhance the experience. 
+
+The iPhone and iOS for that matter has a ton of accessibility features to help with various tasks. One amazing feature lets people that are blind use the touch screen phone using text to speech and speech to text. All the person needs to do is tap the screen and the phone will tell him what on the screen he can select and all he has to do is tell the phone what to do. And the great thing about this is that, it is all handled by the phone and independent from the app. So you don't need to do anything special to your app in order to make in more accessible. On some android phones there is an NFC chip that can be used to send and receive data from one device to another. This tech can also be used to lock and unlock doors, and even send contact information using an NFC imbedded inside of a business card.
+
+One app that I really like is TouchPad by edovia. This app is more of an accessibility app for mac rather than iOS by letting you use your iPhone of iPad as a keyboard and touchpad for you computer. This app is great for HTPCs or just controlling your computer from the other side of the room. Another great app that I think is baked into iOS now is find my iPhone. This is a necessary feature for any phone that lets you know exactly where your phone is and you have lock and even erase your phone remotely. This is a great feature that helps against theft and just misplacement of your expensive devices. </p>
+						</li>
 						<li><a href="#">
-							<h3>Industry Research</h3>
-						</a></li>
+							<h3 id="r3">Industry Research</h3></a>
+							<p id="p3">I searched multiple sources to try and find the top selling app categories in by country, but I was unable to find resent and reliable information. However, I know for a fact that games are the top selling mobile app in every market. The type and quality of the games might very by region, but games will always be the top selling apps, of these apps the top grossing games are the 'freemium' games. Free games with in app purchases are growing fast and racking in a ton of money. With traditional apps only profiting on the number of downloads, but when it comes to freemium apps you don't get money from the initial download, but from all of the tiers of in app purchases that the user has access to. 
+ 
+According to a study conducted by Akamai in Q3 of 2012 of the average mobile connection speeds. 
+ 
+Japan: 10.5 mbps
+United States: 7.1 mbps
+United Kingdom: 6.2 mbps
+ 
+I really don't think that internet speeds would effect the deception I would make in the development of an app. Unless you are living in a third world country with the worst connection in the world, you will be able to easily access the internet features that might be required by the app. Even if mobile internet access is limited there is always wifi.
+ 
+I have always wanted to give back with my talents and I think that the fast growing mobile application market is a great opportunity to do just that. I have a great idea for a freemium game that takes advantage of the massive profit margin brought in by in app purchases and give that money to missions. The first game concept I had was just a farmville type game with in app purchases that correspond with what the money goes to. So like if you purchase food points then the money earned would do towards food, and water points would go towards water purification. 100% of all of the profits would go strait to missions and you would have a breakdown of were all of the money goes within the app. The only way I would make money is from donations.</p>
+						</li>
 					</ul>
 				</div>
 			</li>
 		</ul>
 		<footer>
-			<h4> AVF0212 </h4>
+			<h4> AVF1302 </h4>
 		</footer>
 	</div>
-	
-	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<script type="text/javascript" charset="utf-8" src="cordova-2.3.0.js"></script>
+	<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
 	<script type="text/javascript" src="js/jquery.flexslider-min.js"></script>
 	<script type="text/javascript" src="js/main.js"></script>
+</body>
+</html>
 </body>
 </html>
